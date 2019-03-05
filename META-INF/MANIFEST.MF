@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: bacata-lsp
+Bundle-Vendor: TUe-CWI
+Bundle-SymbolicName: bacata-lsp;singleton:=true
+Bundle-Version: 0.0.1.qualifier
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Main-Class: example.bacata_lsp.App
+Export-Package: example.bacata_lsp,
+ server
