@@ -52,7 +52,7 @@
     "typescript": "^2.1.5"
   },
   "dependencies": {
-    "vscode-languageclient": "^3.1.0",
+    "vscode-languageclient": "^3.5.1",
     "vscode": "^1.1.30"
   }
 }
