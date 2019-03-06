@@ -13,9 +13,14 @@ import org.eclipse.lsp4j.DidChangeTextDocumentParams;
 import org.eclipse.lsp4j.DidCloseTextDocumentParams;
 import org.eclipse.lsp4j.DidOpenTextDocumentParams;
 import org.eclipse.lsp4j.DidSaveTextDocumentParams;
+import org.eclipse.lsp4j.Position;
+import org.eclipse.lsp4j.Range;
+import org.eclipse.lsp4j.TextEdit;
 import org.eclipse.lsp4j.jsonrpc.messages.Either;
 import org.eclipse.lsp4j.services.TextDocumentService;
 import org.rascalmpl.repl.CompletionResult;
+
+import server.BacataModel.DocumentLine;
 	
 public class TemplateTextDocumentService implements TextDocumentService {
 	
@@ -29,17 +34,24 @@ public class TemplateTextDocumentService implements TextDocumentService {
 	@Override
 	public CompletableFuture<Either<List<CompletionItem>, CompletionList>> completion(CompletionParams position) {
 		BacataModel document = docs.get(position.getTextDocument().getUri());
-		String currentLine = document.getResolvedLines().get(document.getResolvedLines().size()-1).text;
-		CompletionResult result = this.server.getLanguage().completeFragment(currentLine, currentLine.length());
-		ArrayList<String> resultz = (ArrayList<String>) result.getSuggestions();
-		
-		return CompletableFuture.completedFuture(Either.forLeft(convert(resultz)));
+		if (!document.getResolvedLines().isEmpty()) {
+			int lineNumber = document.getResolvedLines().size() - 1;
+			DocumentLine currentLine = document.getResolvedLines().get(lineNumber);
+			CompletionResult result = this.server.getLanguage().completeFragment(currentLine.text, currentLine.text.length());
+			return CompletableFuture.completedFuture(Either.forLeft(convert(currentLine.text, lineNumber, result)));
+		}
+		else {
+			return CompletableFuture.completedFuture(Either.forLeft(new ArrayList<CompletionItem>()));
+		}
 	}
 	
-	public List<CompletionItem> convert(ArrayList<String> input) {
+	public List<CompletionItem> convert(String currentLine, int lineNumber, CompletionResult input) {
 		List<CompletionItem> completionItems = new ArrayList<>();
-		for (String string : input) {
-			completionItems.add(new CompletionItem(string));
+		ArrayList<String> suggestions = input != null ? (ArrayList<String>) input.getSuggestions(): new ArrayList<>();
+		for (String string : suggestions) {
+			CompletionItem c = new CompletionItem(string);
+			c.setTextEdit(new TextEdit(new Range(new Position(lineNumber, input.getOffset()), new Position(lineNumber, input.getOffset()+ string.length())), string));
+			completionItems.add(c);
 		}
 		return completionItems;
 	}
