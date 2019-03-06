@@ -12,10 +12,21 @@
     "Other"
   ],
   "activationEvents": [
-    "onLanguage:plaintext"
+    "onLanguage:rascal"
   ],
   "main": "./out/src/extension",
   "contributes": {
+    "languages": [
+      {
+        "id": "rascal",
+        "extensions": [
+          ".rsc"
+        ],
+        "aliases": [
+          "Rascal"
+        ]
+      }
+    ],
     "configuration": {
       "type": "object",
       "title": "Example configuration",
@@ -34,7 +45,7 @@
             "messages",
             "verbose"
           ],
-          "default": "off",
+          "default": "on",
           "description": "Traces the communication between VSCode and the languageServerExample service."
         }
       }
