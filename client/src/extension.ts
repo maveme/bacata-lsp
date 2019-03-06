@@ -40,9 +40,9 @@ export function activate(context: ExtensionContext) {
 
 				let args = [
 					'-jar',
-					'-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000',
+					// '-Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=8000',
 					// path.resolve(context.extensionPath, '..', 'server', 'build', 'libs', 'language-server-example-all.jar'),
-					path.resolve(context.extensionPath, 'bacata-lsp-0.0.1-SNAPSHOT-jar-with-dependencies.jar'),
+					path.resolve(context.extensionPath, '..', 'server', 'target', 'bacata-lsp-0.0.1-SNAPSHOT-jar-with-dependencies.jar'),
 					server.address().port.toString()
 				]
 
